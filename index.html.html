@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huellas con Amor | Adopción Responsable con IA</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans y Lora para títulos cálidos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FDFBF7',
+                            100: '#F8F4EC',
+                            200: '#EFE6D5',
+                        },
+                        terracotta: {
+                            50: '#FDF4F2',
+                            100: '#FCE5DF',
+                            400: '#E07A5F',
+                            500: '#D46548',
+                            600: '#B84E33',
+                        },
+                        sage: {
+                            50: '#F3F7F4',
+                            100: '#E2ECE5',
+                            500: '#769A82',
+                            600: '#5A7D66',
+                            700: '#45614F',
+                        },
+                        charcoal: {
+                            700: '#4A4642',
+                            800: '#33302D',
+                            900: '#22201E',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Lora"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Animaciones suaves y utilidades personalizadas */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        .pet-card-img {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .pet-card:hover .pet-card-img {
+            transform: scale(1.06);
+        }
+        /* Scrollbar personalizada para el chat */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F8F4EC;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D46548;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-cream-50 text-charcoal-800 font-sans antialiased selection:bg-terracotta-400 selection:text-white">
+
+    <!-- Notificación Toast Flotante (Reemplazo seguro de alert) -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Navegación Principal -->
+    <header class="sticky top-0 z-40 bg-cream-50/90 backdrop-blur-md border-b border-cream-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-terracotta-400 flex items-center justify-center text-white shadow-md group-hover:bg-terracotta-500 transition-colors">
+                        <i data-lucide="paw-print" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-xl sm:text-2xl font-bold text-charcoal-900 tracking-tight block leading-none">Huellas con Amor</span>
+                        <span class="text-xs font-medium text-sage-600 tracking-wide">Refugio & Adopción Inteligente</span>
+                    </div>
+                </a>
+
+                <!-- Enlaces Desktop -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#catalogo" class="text-sm font-semibold text-charcoal-700 hover:text-terracotta-500 transition-colors">Peluditos en Adopción</a>
+                    <a href="#match-ia" class="text-sm font-semibold text-charcoal-700 hover:text-terracotta-500 transition-colors flex items-center gap-1.5">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-terracotta-400"></i>
+                        Match con IA
+                    </a>
+                    <a href="#proceso" class="text-sm font-semibold text-charcoal-700 hover:text-terracotta-500 transition-colors">Cómo Adoptar</a>
+                    <a href="#guia-ia" class="text-sm font-semibold text-charcoal-700 hover:text-terracotta-500 transition-colors">Asesoría Veterinaria</a>
+                </nav>
+
+                <!-- Botón CTA Desktop & Menú Móvil -->
+                <div class="flex items-center gap-3">
+                    <a href="#match-ia" class="hidden sm:inline-flex items-center gap-2 bg-terracotta-400 hover:bg-terracotta-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm hover:shadow transition-all">
+                        <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                        Encontrar mi Compañero
+                    </a>
+                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="md:hidden p-2.5 rounded-xl bg-cream-100 text-charcoal-800 hover:bg-cream-200 transition-colors">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cream-100 border-b border-cream-200 px-4 pt-2 pb-6 space-y-2">
+            <a href="#catalogo" class="block px-4 py-3 rounded-xl text-base font-semibold text-charcoal-800 hover:bg-cream-200">Peluditos en Adopción</a>
+            <a href="#match-ia" class="block px-4 py-3 rounded-xl text-base font-semibold text-terracotta-600 hover:bg-cream-200 flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Match con Inteligencia Artificial
+            </a>
+            <a href="#proceso" class="block px-4 py-3 rounded-xl text-base font-semibold text-charcoal-800 hover:bg-cream-200">Proceso Responsable</a>
+            <a href="#guia-ia" class="block px-4 py-3 rounded-xl text-base font-semibold text-charcoal-800 hover:bg-cream-200">Preguntar al Asistente IA</a>
+        </div>
+    </header>
+
+    <!-- Sección Hero -->
+    <section class="relative overflow-hidden pt-10 pb-16 lg:pt-20 lg:pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Texto Principal -->
+                <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-100 text-sage-700 text-xs sm:text-sm font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-sage-500 animate-pulse"></span>
+                        Más de 420 familias unidas este año
+                    </div>
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-charcoal-900 leading-tight">
+                        Cada huella merece un <span class="text-terracotta-500 italic">hogar lleno de amor</span>.
+                    </h1>
+                    <p class="text-base sm:text-lg text-charcoal-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        Conectamos corazones humanos con perros y gatos rescatados. Usa nuestro <strong>Asistente de Emparejamiento con Inteligencia Artificial</strong> para descubrir qué compañero se adapta mejor a tu ritmo de vida y hogar.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+                        <a href="#catalogo" class="inline-flex items-center justify-center gap-2 bg-charcoal-900 hover:bg-charcoal-800 text-white font-semibold px-7 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                            Explorar Mascotas
+                        </a>
+                        <a href="#match-ia" class="inline-flex items-center justify-center gap-2 bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-600 border border-terracotta-400/30 font-semibold px-7 py-4 rounded-2xl transition-all">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-terracotta-500"></i>
+                            Test de Compatibilidad IA
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Composición Visual Hero -->
+                <div class="lg:col-span-6 relative">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] bg-cream-200">
+                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80" 
+                             alt="Perros felices corriendo juntos" 
+                             onerror="this.src='https://placehold.co/800x600/EFE6D5/33302D?text=Huellas+con+Amor'"
+                             class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/40 via-transparent to-transparent"></div>
+                    </div>
+
+                    <!-- Tarjeta Flotante IA -->
+                    <div class="hidden sm:flex items-center gap-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-cream-200 absolute -bottom-6 -left-6 max-w-xs animate-float">
+                        <div class="w-12 h-12 rounded-xl bg-sage-100 text-sage-600 flex items-center justify-center shrink-0">
+                            <i data-lucide="bot" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-sage-600 uppercase tracking-wider">IA Gemini Integrada</p>
+                            <p class="text-sm font-semibold text-charcoal-900">Analizamos tu rutina para lograr adopciones exitosas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Catálogo Interactivo de Mascotas -->
+    <section id="catalogo" class="py-16 bg-cream-100/70 border-y border-cream-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Encabezado y Filtros -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div>
+                    <span class="text-terracotta-500 font-bold text-sm uppercase tracking-wider">Nuestros Rescatados</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900 mt-1">Conoce a quienes esperan por ti</h2>
+                    <p class="text-charcoal-700 mt-2 max-w-xl">Todos nuestros peluditos se entregan vacunados, desparasitados, esterilizados y con mucho amor para dar.</p>
+                </div>
+
+                <!-- Controles de Filtro -->
+                <div class="flex flex-wrap gap-3">
+                    <!-- Filtro Especie -->
+                    <div class="inline-flex bg-white p-1.5 rounded-2xl shadow-sm border border-cream-200" role="group" aria-label="Filtrar por especie">
+                        <button type="button" data-filter-species="todos" class="species-btn active px-4 py-2 rounded-xl text-sm font-semibold bg-terracotta-400 text-white transition-all">Todos</button>
+                        <button type="button" data-filter-species="Perro" class="species-btn px-4 py-2 rounded-xl text-sm font-semibold text-charcoal-700 hover:bg-cream-100 transition-all">Perros</button>
+                        <button type="button" data-filter-species="Gato" class="species-btn px-4 py-2 rounded-xl text-sm font-semibold text-charcoal-700 hover:bg-cream-100 transition-all">Gatos</button>
+                    </div>
+
+                    <!-- Filtro Tamaño -->
+                    <select id="filter-size" aria-label="Filtrar por tamaño" class="bg-white border border-cream-200 text-charcoal-800 text-sm font-semibold rounded-2xl px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                        <option value="todos">Tamaño: Todos</option>
+                        <option value="Pequeño">Pequeño</option>
+                        <option value="Mediano">Mediano</option>
+                        <option value="Grande">Grande</option>
+                    </select>
+
+                    <!-- Filtro Energía -->
+                    <select id="filter-energy" aria-label="Filtrar por nivel de energía" class="bg-white border border-cream-200 text-charcoal-800 text-sm font-semibold rounded-2xl px-4 py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                        <option value="todos">Energía: Todas</option>
+                        <option value="Tranquilo">Tranquilo / Hogareño</option>
+                        <option value="Moderado">Moderado / Juguetón</option>
+                        <option value="Activo">Muy Activo / Aventurero</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid de Tarjetas de Mascotas -->
+            <div id="pets-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Renderizado dinámicamente mediante JS -->
+            </div>
+
+            <!-- Mensaje cuando no hay resultados -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-cream-200 mt-6">
+                <div class="w-16 h-16 bg-cream-100 text-terracotta-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                </div>
+                <h3 class="font-serif text-xl font-bold text-charcoal-900">No encontramos peluditos con esos filtros</h3>
+                <p class="text-charcoal-700 mt-1 mb-5">Intenta cambiar el tamaño o el nivel de energía para ver más amigos disponibles.</p>
+                <button id="reset-filters-btn" class="px-6 py-2.5 bg-terracotta-400 text-white font-semibold rounded-xl hover:bg-terracotta-500 transition-colors">
+                    Mostrar todas las mascotas
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Asistente de Emparejamiento con IA (Gemini API) -->
+    <section id="match-ia" class="py-20 bg-cream-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-[2rem] shadow-xl border border-cream-200 overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12">
+                    <!-- Panel Izquierdo: Cuestionario del Usuario -->
+                    <div class="lg:col-span-6 p-8 sm:p-10 lg:p-12 bg-sage-50/60 border-b lg:border-b-0 lg:border-r border-cream-200">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sage-100 text-sage-700 text-xs font-bold uppercase tracking-wider mb-4">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            Impulsado por Gemini AI
+                        </div>
+                        <h2 class="font-serif text-3xl font-bold text-charcoal-900 leading-tight">
+                            Encuentra tu Match Perfecto con IA
+                        </h2>
+                        <p class="text-charcoal-700 text-sm sm:text-base mt-2 mb-6">
+                            Cuéntanos cómo es tu hogar y tu rutina diaria. Nuestra IA analizará la personalidad de todos nuestros rescatados para recomendarte a tus compañeros ideales.
+                        </p>
+
+                        <form id="ai-match-form" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="match-home" class="block text-xs font-bold text-charcoal-800 uppercase tracking-wide mb-1.5">Tipo de Vivienda</label>
+                                    <select id="match-home" class="w-full bg-white border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage-500">
+                                        <option value="Departamento pequeño o mediano">Departamento</option>
+                                        <option value="Casa con patio pequeño">Casa con patio pequeño</option>
+                                        <option value="Casa amplia con jardín grande">Casa con jardín grande</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="match-activity" class="block text-xs font-bold text-charcoal-800 uppercase tracking-wide mb-1.5">Tu Nivel de Actividad</label>
+                                    <select id="match-activity" class="w-full bg-white border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage-500">
+                                        <option value="Tranquilo, prefiero paseos cortos y tardes en casa">Tranquilo / Hogareño</option>
+                                        <option value="Moderado, salgo a caminar 1 hora al día">Moderado / Paseos diarios</option>
+                                        <option value="Muy activo, corro, hago senderismo o deporte">Muy activo / Deportista</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="match-time" class="block text-xs font-bold text-charcoal-800 uppercase tracking-wide mb-1.5">Tiempo libre en casa</label>
+                                    <select id="match-time" class="w-full bg-white border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage-500">
+                                        <option value="Trabajo desde casa, estoy casi todo el día">Trabajo en casa (Mucho tiempo)</option>
+                                        <option value="Salgo unas 5-6 horas al día">Medio tiempo fuera</option>
+                                        <option value="Trabajo fuera 8 horas, busco mascota independiente">Jornada completa fuera</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="match-family" class="block text-xs font-bold text-charcoal-800 uppercase tracking-wide mb-1.5">Convivencia en el hogar</label>
+                                    <select id="match-family" class="w-full bg-white border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage-500">
+                                        <option value="Vivo solo/a o en pareja sin niños">Solo / Pareja sin niños</option>
+                                        <option value="Hay niños pequeños en casa">Con niños en casa</option>
+                                        <option value="Ya tengo otros perros o gatos">Ya tengo otras mascotas</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="match-notes" class="block text-xs font-bold text-charcoal-800 uppercase tracking-wide mb-1.5">
+                                    ¿Alguna preferencia adicional? (Opcional)
+                                </label>
+                                <textarea id="match-notes" rows="3" placeholder="Ej: Es mi primera mascota, prefiero un gato cariñoso o un perro que no ladre mucho..." class="w-full bg-white border border-cream-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500"></textarea>
+                            </div>
+
+                            <button type="submit" id="match-submit-btn" class="w-full bg-sage-600 hover:bg-sage-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="wand-2" class="w-5 h-5"></i>
+                                <span>Analizar Compatibilidad con IA</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Panel Derecho: Resultados de la IA -->
+                    <div class="lg:col-span-6 p-8 sm:p-10 lg:p-12 flex flex-col justify-center bg-white">
+                        <!-- Estado Inicial -->
+                        <div id="match-placeholder" class="text-center space-y-4 py-8">
+                            <div class="w-20 h-20 rounded-3xl bg-terracotta-50 text-terracotta-400 flex items-center justify-center mx-auto">
+                                <i data-lucide="heart-pulse" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="font-serif text-2xl font-bold text-charcoal-900">Tu recomendación aparecerá aquí</h3>
+                            <p class="text-charcoal-700 text-sm max-w-md mx-auto leading-relaxed">
+                                Completa los datos de tu estilo de vida a la izquierda. Nuestro especialista virtual evaluará el temperamento y necesidades de cada mascota para darte su veredicto.
+                            </p>
+                        </div>
+
+                        <!-- Estado Cargando -->
+                        <div id="match-loading" class="hidden text-center space-y-4 py-12">
+                            <div class="w-14 h-14 border-4 border-terracotta-100 border-t-terracotta-500 rounded-full animate-spin mx-auto"></div>
+                            <h3 class="font-serif text-xl font-bold text-charcoal-900">Analizando compatibilidad...</h3>
+                            <p class="text-charcoal-700 text-sm">Revisando temperamentos, niveles de energía y espacio en casa.</p>
+                        </div>
+
+                        <!-- Estado Resultados -->
+                        <div id="match-results" class="hidden space-y-5">
+                            <div class="flex items-center justify-between border-b border-cream-200 pb-3">
+                                <span class="text-xs font-bold uppercase tracking-wider text-terracotta-500 flex items-center gap-1.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Diagnóstico de Compatibilidad
+                                </span>
+                                <button type="button" id="match-clear-btn" class="text-xs font-semibold text-charcoal-700 hover:text-terracotta-500">Nueva consulta</button>
+                            </div>
+                            <p id="match-intro-text" class="text-sm text-charcoal-700 leading-relaxed bg-cream-50 p-4 rounded-2xl border border-cream-200"></p>
+                            <div id="match-cards-container" class="space-y-3">
+                                <!-- Tarjetas recomendadas por la IA -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Educativa: Proceso de Adopción Responsable -->
+    <section id="proceso" class="py-16 bg-cream-100/80 border-t border-cream-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-sage-600 font-bold text-sm uppercase tracking-wider">Compromiso para toda la vida</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900 mt-1">¿Cómo funciona la adopción?</h2>
+                <p class="text-charcoal-700 mt-3">Queremos asegurarnos de que tanto tú como tu nuevo amigo tengan una transición feliz, segura y llena de confianza.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Paso 1 -->
+                <div class="bg-white p-7 rounded-3xl border border-cream-200 shadow-sm hover:shadow-md transition-shadow relative">
+                    <div class="w-12 h-12 rounded-2xl bg-terracotta-50 text-terracotta-500 font-serif font-bold text-xl flex items-center justify-center mb-5">1</div>
+                    <h3 class="font-serif text-xl font-bold text-charcoal-900 mb-2">Explora y Conecta</h3>
+                    <p class="text-sm text-charcoal-700 leading-relaxed">Conoce las historias de nuestros rescatados o usa nuestro Match con IA para descubrir quién encaja contigo.</p>
+                </div>
+
+                <!-- Paso 2 -->
+                <div class="bg-white p-7 rounded-3xl border border-cream-200 shadow-sm hover:shadow-md transition-shadow relative">
+                    <div class="w-12 h-12 rounded-2xl bg-sage-100 text-sage-700 font-serif font-bold text-xl flex items-center justify-center mb-5">2</div>
+                    <h3 class="font-serif text-xl font-bold text-charcoal-900 mb-2">Envía tu Solicitud</h3>
+                    <p class="text-sm text-charcoal-700 leading-relaxed">Completa el formulario de pre-adopción en la ficha de tu elegido. Nuestro equipo revisará tu perfil con cariño.</p>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="bg-white p-7 rounded-3xl border border-cream-200 shadow-sm hover:shadow-md transition-shadow relative">
+                    <div class="w-12 h-12 rounded-2xl bg-terracotta-50 text-terracotta-500 font-serif font-bold text-xl flex items-center justify-center mb-5">3</div>
+                    <h3 class="font-serif text-xl font-bold text-charcoal-900 mb-2">Encuentro y Hogar</h3>
+                    <p class="text-sm text-charcoal-700 leading-relaxed">Coordinamos una visita para que se conozcan en persona y te guiamos para preparar un espacio seguro en casa.</p>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="bg-white p-7 rounded-3xl border border-cream-200 shadow-sm hover:shadow-md transition-shadow relative">
+                    <div class="w-12 h-12 rounded-2xl bg-sage-100 text-sage-700 font-serif font-bold text-xl flex items-center justify-center mb-5">4</div>
+                    <h3 class="font-serif text-xl font-bold text-charcoal-900 mb-2">¡Bienvenido a Casa!</h3>
+                    <p class="text-sm text-charcoal-700 leading-relaxed">Firmamos el acta de adopción responsable y te acompañamos durante las primeras semanas de adaptación.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Asistente Virtual / Chatbot Integrado de Cuidados y Adopción -->
+    <section id="guia-ia" class="py-20 bg-cream-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-terracotta-500 font-bold text-sm uppercase tracking-wider">Orientación 24/7 con IA</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900 mt-1">Asistente de Cuidados y Adopción</h2>
+                <p class="text-charcoal-700 mt-2">¿Tienes dudas sobre alimentación, adaptación de mascotas tímidas o requisitos de adopción? Pregúntale a <strong>Luna</strong>, nuestra guía virtual.</p>
+            </div>
+
+            <!-- Contenedor del Chat -->
+            <div class="bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden flex flex-col h-[520px]">
+                <!-- Cabecera Chat -->
+                <div class="bg-charcoal-900 text-white px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-terracotta-400 flex items-center justify-center text-white">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Luna • Asistente de Huellas con Amor</h3>
+                            <p class="text-xs text-sage-100 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> En línea • Especialista en bienestar animal
+                            </p>
+                        </div>
+                    </div>
+                    <button id="clear-chat-btn" title="Reiniciar conversación" class="text-xs text-cream-200 hover:text-white px-3 py-1.5 rounded-lg bg-white/10 transition-colors">
+                        Limpiar chat
+                    </button>
+                </div>
+
+                <!-- Sugerencias Rápidas -->
+                <div class="bg-cream-100 px-4 py-2.5 border-b border-cream-200 flex gap-2 overflow-x-auto no-scrollbar">
+                    <button type="button" class="quick-prompt shrink-0 text-xs font-semibold bg-white hover:bg-terracotta-50 text-charcoal-800 hover:text-terracotta-600 border border-cream-200 px-3 py-1.5 rounded-full transition-colors">
+                        ¿Cómo preparo mi casa para un gato?
+                    </button>
+                    <button type="button" class="quick-prompt shrink-0 text-xs font-semibold bg-white hover:bg-terracotta-50 text-charcoal-800 hover:text-terracotta-600 border border-cream-200 px-3 py-1.5 rounded-full transition-colors">
+                        ¿Qué es la regla 3-3-3 en perros adoptados?
+                    </button>
+                    <button type="button" class="quick-prompt shrink-0 text-xs font-semibold bg-white hover:bg-terracotta-50 text-charcoal-800 hover:text-terracotta-600 border border-cream-200 px-3 py-1.5 rounded-full transition-colors">
+                        ¿Qué requisitos piden para adoptar?
+                    </button>
+                </div>
+
+                <!-- Mensajes -->
+                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar bg-cream-50/40">
+                    <!-- Mensaje Inicial de Bienvenida -->
+                    <div class="flex items-start gap-3 max-w-2xl">
+                        <div class="w-8 h-8 rounded-full bg-terracotta-400 text-white flex items-center justify-center shrink-0 mt-1">
+                            <i data-lucide="paw-print" class="w-4 h-4"></i>
+                        </div>
+                        <div class="bg-white border border-cream-200 rounded-2xl rounded-tl-none p-4 shadow-sm text-sm text-charcoal-800 leading-relaxed">
+                            ¡Hola! Soy <strong>Luna</strong>, tu asistente virtual de <em>Huellas con Amor</em> 🐾. Estoy aquí para ayudarte con cualquier duda sobre nuestros peluditos, consejos de adaptación, nutrición o cómo preparar tu hogar para una adopción responsable. ¿En qué puedo ayudarte hoy?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input del Chat -->
+                <form id="chat-form" class="p-4 bg-white border-t border-cream-200 flex items-center gap-3">
+                    <input type="text" id="chat-input" required placeholder="Escribe tu pregunta sobre adopción o cuidados..." 
+                           class="flex-1 bg-cream-100 border border-cream-200 rounded-2xl px-4 py-3 text-sm text-charcoal-900 placeholder-charcoal-700/60 focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                    <button type="submit" id="chat-send-btn" class="bg-terracotta-400 hover:bg-terracotta-500 text-white p-3.5 rounded-2xl shadow-sm transition-all flex items-center justify-center shrink-0">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-charcoal-900 text-cream-100 py-12 border-t border-charcoal-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-terracotta-400 flex items-center justify-center text-white">
+                    <i data-lucide="paw-print" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-xl font-bold text-white block">Huellas con Amor</span>
+                    <span class="text-xs text-cream-200/70">Adopción responsable impulsada con empatía e IA</span>
+                </div>
+            </div>
+            <p class="text-xs text-cream-200/70 text-center md:text-right">
+                © 2026 Refugio Huellas con Amor. Todos los derechos reservados. <br class="sm:hidden">Adoptar salva dos vidas: la suya y la tuya.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Modal de Detalles de Mascota y Solicitud de Adopción -->
+    <div id="pet-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-charcoal-900/60 backdrop-blur-sm overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-cream-200 overflow-hidden my-8 relative animate-[fadeIn_0.2s_ease-out]">
+            <!-- Botón Cerrar -->
+            <button id="close-modal-btn" aria-label="Cerrar ventana" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-charcoal-900 shadow-md flex items-center justify-center transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div id="modal-body" class="grid grid-cols-1 md:grid-cols-12">
+                <!-- Contenido inyectado dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Principal de Aplicación e Integración Gemini API -->
+    <script>
+        // ==========================================
+        // 1. BASE DE DATOS DE MASCOTAS EN ADOPCIÓN
+        // ==========================================
+        const PETS_DATA = [
+            {
+                id: 'canela',
+                name: 'Canela',
+                species: 'Perro',
+                breed: 'Mestiza Golden / Criolla',
+                age: '2 años',
+                size: 'Mediano',
+                energy: 'Moderado',
+                personality: ['Cariñosa', 'Sociable', 'Obediente'],
+                health: 'Vacunada, esterilizada y con microchip',
+                goodWith: 'Niños y otros perros',
+                image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80',
+                story: 'Canela fue rescatada cerca de un parque y desde el primer día demostró una dulzura infinita. Le encanta dar paseos tranquilos por la tarde y apoyar su cabeza en tus piernas mientras lees o ves televisión.'
+            },
+            {
+                id: 'oliver',
+                name: 'Oliver',
+                species: 'Gato',
+                breed: 'Atigrado Naranja',
+                age: '1 año y medio',
+                size: 'Pequeño',
+                energy: 'Tranquilo',
+                personality: ['Ronroneador', 'Hogareño', 'Curioso'],
+                health: 'Vacunado, esterilizado, negativo a FeLV/FIV',
+                goodWith: 'Departamentos y hogares tranquilos',
+                image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80',
+                story: 'Oliver es un caballero pelirrojo experto en siestas al sol. Se adapta maravillosamente a departamentos y disfruta de sesiones suaves de juego con plumero antes de dormir.'
+            },
+            {
+                id: 'bruno',
+                name: 'Bruno',
+                species: 'Perro',
+                breed: 'Mestizo Labrador / Pastor',
+                age: '3 años',
+                size: 'Grande',
+                energy: 'Activo',
+                personality: ['Leal', 'Aventurero', 'Inteligente'],
+                health: 'Vacunado, esterilizado y desparasitado',
+                goodWith: 'Personas activas y casas con patio',
+                image: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80',
+                story: 'Bruno es el compañero soñado para quienes aman salir a correr o hacer caminatas largas. Aprende trucos muy rápido y siempre te recibirá con una sonrisa gigante.'
+            },
+            {
+                id: 'miel',
+                name: 'Miel',
+                species: 'Gato',
+                breed: 'Siamés Mestizo',
+                age: '8 meses',
+                size: 'Pequeño',
+                energy: 'Moderado',
+                personality: ['Juguetona', 'Dulce', 'Conversadora'],
+                health: 'Vacunada y esterilizada',
+                goodWith: 'Otros gatos y familias cariñosas',
+                image: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=800&q=80',
+                story: 'Miel tiene unos ojos azules hipnotizantes y le encanta "conversar" con suaves maullidos cuando llegas a casa. Es muy limpia, tierna y adora perseguir pelotitas de tela.'
+            },
+            {
+                id: 'toby',
+                name: 'Toby',
+                species: 'Perro',
+                breed: 'Mestizo Terrier / Salchicha',
+                age: '4 años',
+                size: 'Pequeño',
+                energy: 'Tranquilo',
+                personality: ['Fiel', 'Calmado', 'Tierno'],
+                health: 'Vacunado, esterilizado y limpieza dental al día',
+                goodWith: 'Adultos mayores y departamentos',
+                image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
+                story: 'Toby es pequeño en estatura pero gigante en corazón. No requiere ejercicios intensos; con tres paseos cortos al día y una camita acolchada cerca de ti será el perro más feliz del mundo.'
+            },
+            {
+                id: 'nala',
+                name: 'Nala',
+                species: 'Gato',
+                breed: 'Carey / Tricolor',
+                age: '2 años',
+                size: 'Pequeño',
+                energy: 'Tranquilo',
+                personality: ['Independiente', 'Elegante', 'Afectuosa'],
+                health: 'Vacunada, esterilizada y desparasitada',
+                goodWith: 'Personas que trabajan fuera de casa',
+                image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80',
+                story: 'Nala sabe entretenerse sola mirando por la ventana mientras trabajas, pero en cuanto te sientas en el sofá, buscará tu regazo para recibir mimos en la barbilla.'
+            },
+            {
+                id: 'rocky',
+                name: 'Rocky',
+                species: 'Perro',
+                breed: 'Mestizo Bóxer / Criollo',
+                age: '1 año',
+                size: 'Mediano',
+                energy: 'Activo',
+                personality: ['Alegre', 'Divertido', 'Protector'],
+                health: 'Vacunado y esterilizado',
+                goodWith: 'Familias con niños mayores de 6 años',
+                image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80',
+                story: 'Rocky tiene energía positiva contagiosa. Le fascina jugar a traer la pelota y luego caer rendido a dormir la siesta. Ideal para hogares dinámicos con ganas de divertirse.'
+            },
+            {
+                id: 'copito',
+                name: 'Copito',
+                species: 'Gato',
+                breed: 'Blanco de Pelo Semilargo',
+                age: '3 años',
+                size: 'Mediano',
+                energy: 'Tranquilo',
+                personality: ['Sereno', 'Dócil', 'Compañero'],
+                health: 'Vacunado y esterilizado',
+                goodWith: 'Hogares pacíficos y otros gatos',
+                image: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80',
+                story: 'Copito es una nube de paz. Fue rescatado de la calle y agradece cada caricia con un ronroneo profundo. Es muy paciente y ideal para adoptantes primerizos.'
+            }
+        ];
+
+        // ==========================================
+        // 2. CONFIGURACIÓN DE LA API DE GEMINI
+        // ==========================================
+        const apiKey = ""; // Se provee automáticamente en tiempo de ejecución
+        const GEMINI_MODEL = "gemini-3-flash-preview";
+
+        /**
+         * Llama a la API de Gemini con reintentos exponenciales (exponential backoff)
+         */
+        async function callGeminiAPI(payload) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+            const maxRetries = 4;
+            let delay = 1000;
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) throw new Error("Respuesta vacía del modelo");
+                    return text;
+                } catch (error) {
+                    if (attempt === maxRetries) {
+                        throw error;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // ==========================================
+        // 3. UTILIDADES DE INTERFAZ (TOASTS Y ICONOS)
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-600' : 'bg-charcoal-900';
+            const iconName = type === 'error' ? 'alert-circle' : 'heart';
+
+            toast.className = `${bgColor} text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
+            toast.innerHTML = `
+                <i data-lucide="${iconName}" class="w-4 h-4 text-terracotta-400 shrink-0"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ==========================================
+        // 4. RENDERIZADO Y FILTRADO DEL CATÁLOGO
+        // ==========================================
+        let currentFilters = {
+            species: 'todos',
+            size: 'todos',
+            energy: 'todos'
+        };
+
+        function renderPets() {
+            const grid = document.getElementById('pets-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            const filtered = PETS_DATA.filter(pet => {
+                const matchSpecies = currentFilters.species === 'todos' || pet.species === currentFilters.species;
+                const matchSize = currentFilters.size === 'todos' || pet.size === currentFilters.size;
+                const matchEnergy = currentFilters.energy === 'todos' || pet.energy === currentFilters.energy;
+                return matchSpecies && matchSize && matchEnergy;
+            });
+
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(pet => {
+                const speciesBadgeColor = pet.species === 'Perro' 
+                    ? 'bg-terracotta-50 text-terracotta-600' 
+                    : 'bg-sage-100 text-sage-700';
+
+                const card = document.createElement('article');
+                card.className = 'pet-card bg-white rounded-3xl border border-cream-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col';
+                card.innerHTML = `
+                    <div class="relative aspect-[4/3] overflow-hidden bg-cream-200 cursor-pointer" onclick="openPetModal('${pet.id}')">
+                        <img src="${pet.image}" alt="${pet.name}" 
+                             onerror="this.src='https://placehold.co/600x450/EFE6D5/33302D?text=${encodeURIComponent(pet.name)}'"
+                             class="pet-card-img w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold ${speciesBadgeColor} shadow-sm">
+                            ${pet.species}
+                        </span>
+                        <span class="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-charcoal-900/75 text-white backdrop-blur-sm">
+                            ${pet.age}
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-serif text-2xl font-bold text-charcoal-900">${pet.name}</h3>
+                                <span class="text-xs font-semibold text-charcoal-700 bg-cream-100 px-2.5 py-1 rounded-lg">
+                                    ${pet.size}
+                                </span>
+                            </div>
+                            <p class="text-xs text-charcoal-700 mt-0.5">${pet.breed}</p>
+                            
+                            <div class="flex flex-wrap gap-1.5 mt-3">
+                                ${pet.personality.map(trait => `
+                                    <span class="text-xs font-medium bg-cream-100 text-charcoal-800 px-2.5 py-1 rounded-full">${trait}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-cream-200 flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-sage-700 flex items-center gap-1">
+                                <i data-lucide="zap" class="w-3.5 h-3.5"></i> ${pet.energy}
+                            </span>
+                            <button type="button" onclick="openPetModal('${pet.id}')" 
+                                    class="px-4 py-2 rounded-xl bg-terracotta-400 hover:bg-terracotta-500 text-white text-xs font-bold transition-colors">
+                                Conocer y Adoptar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Eventos de Filtro
+        document.querySelectorAll('.species-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.species-btn').forEach(b => {
+                    b.classList.remove('bg-terracotta-400', 'text-white');
+                    b.classList.add('text-charcoal-700', 'hover:bg-cream-100');
+                });
+                btn.classList.add('bg-terracotta-400', 'text-white');
+                btn.classList.remove('text-charcoal-700', 'hover:bg-cream-100');
+                currentFilters.species = btn.dataset.filterSpecies;
+                renderPets();
+            });
+        });
+
+        document.getElementById('filter-size').addEventListener('change', (e) => {
+            currentFilters.size = e.target.value;
+            renderPets();
+        });
+
+        document.getElementById('filter-energy').addEventListener('change', (e) => {
+            currentFilters.energy = e.target.value;
+            renderPets();
+        });
+
+        document.getElementById('reset-filters-btn').addEventListener('click', () => {
+            currentFilters = { species: 'todos', size: 'todos', energy: 'todos' };
+            document.getElementById('filter-size').value = 'todos';
+            document.getElementById('filter-energy').value = 'todos';
+            document.querySelectorAll('.species-btn').forEach(b => {
+                b.classList.remove('bg-terracotta-400', 'text-white');
+                b.classList.add('text-charcoal-700');
+            });
+            document.querySelector('[data-filter-species="todos"]').classList.add('bg-terracotta-400', 'text-white');
+            renderPets();
+        });
+
+        // ==========================================
+        // 5. MODAL DE DETALLES Y FORMULARIO DE ADOPCIÓN
+        // ==========================================
+        const petModal = document.getElementById('pet-modal');
+        const modalBody = document.getElementById('modal-body');
+
+        window.openPetModal = function(petId) {
+            const pet = PETS_DATA.find(p => p.id === petId);
+            if (!pet) return;
+
+            modalBody.innerHTML = `
+                <!-- Imagen Izquierda -->
+                <div class="md:col-span-5 relative bg-cream-200 min-h-[260px]">
+                    <img src="${pet.image}" alt="${pet.name}" 
+                         onerror="this.src='https://placehold.co/600x600/EFE6D5/33302D?text=${encodeURIComponent(pet.name)}'"
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl text-xs font-bold text-sage-700 shadow-sm flex items-center gap-1.5">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> Salud verificada
+                    </div>
+                </div>
+
+                <!-- Detalles y Formulario Derecha -->
+                <div class="md:col-span-7 p-6 sm:p-8 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                    <div id="pet-details-view">
+                        <div class="flex items-center gap-2 text-xs font-bold text-terracotta-500 uppercase tracking-wider">
+                            <span>${pet.species}</span> • <span>${pet.breed}</span>
+                        </div>
+                        <h3 class="font-serif text-3xl font-bold text-charcoal-900 mt-1">${pet.name}</h3>
+                        
+                        <div class="grid grid-cols-3 gap-2 my-4">
+                            <div class="bg-cream-100 p-2.5 rounded-xl text-center">
+                                <span class="text-[11px] text-charcoal-700 block">Edad</span>
+                                <span class="text-xs font-bold text-charcoal-900">${pet.age}</span>
+                            </div>
+                            <div class="bg-cream-100 p-2.5 rounded-xl text-center">
+                                <span class="text-[11px] text-charcoal-700 block">Tamaño</span>
+                                <span class="text-xs font-bold text-charcoal-900">${pet.size}</span>
+                            </div>
+                            <div class="bg-cream-100 p-2.5 rounded-xl text-center">
+                                <span class="text-[11px] text-charcoal-700 block">Energía</span>
+                                <span class="text-xs font-bold text-charcoal-900">${pet.energy}</span>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-charcoal-700 leading-relaxed mb-4">${pet.story}</p>
+
+                        <div class="space-y-2 text-xs text-charcoal-800 bg-sage-50 p-4 rounded-2xl border border-sage-100 mb-6">
+                            <p><strong>Estado Médico:</strong> ${pet.health}</p>
+                            <p><strong>Convivencia ideal:</strong> ${pet.goodWith}</p>
+                        </div>
+
+                        <button type="button" onclick="showAdoptionForm('${pet.id}')" 
+                                class="w-full py-3.5 px-6 rounded-2xl bg-terracotta-400 hover:bg-terracotta-500 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="heart" class="w-4 h-4"></i> Iniciar Solicitud para Adoptar a ${pet.name}
+                        </button>
+                    </div>
+
+                    <!-- Vista Formulario de Adopción (Oculta inicialmente) -->
+                    <div id="pet-adoption-form-view" class="hidden">
+                        <button type="button" onclick="backToDetails()" class="text-xs font-bold text-charcoal-700 hover:text-terracotta-500 flex items-center gap-1 mb-3">
+                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Volver a la historia de ${pet.name}
+                        </button>
+                        <h4 class="font-serif text-2xl font-bold text-charcoal-900">Solicitud para ${pet.name}</h4>
+                        <p class="text-xs text-charcoal-700 mt-1 mb-4">Déjanos tus datos y nuestro equipo de adopciones te contactará en menos de 24 horas.</p>
+                        
+                        <form onsubmit="submitAdoptionRequest(event, '${pet.name}')" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal-800 mb-1">Nombre completo</label>
+                                <input type="text" required placeholder="Tu nombre y apellido" class="w-full bg-cream-50 border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-charcoal-800 mb-1">Teléfono / WhatsApp</label>
+                                    <input type="tel" required placeholder="+593 99 000 0000" class="w-full bg-cream-50 border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-charcoal-800 mb-1">Correo electrónico</label>
+                                    <input type="email" required placeholder="tu@correo.com" class="w-full bg-cream-50 border border-cream-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal-800 mb-1">¿Por qué te gustaría adoptar a ${pet.name}?</label>
+                                <textarea required rows="2" placeholder="Cuéntanos un poco sobre tu hogar..." class="w-full bg-cream-50 border border-cream-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-400"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 px-5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold text-sm shadow-md transition-all">
+                                Enviar Solicitud de Adopción
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            petModal.classList.remove('hidden');
+            petModal.classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.showAdoptionForm = function() {
+            document.getElementById('pet-details-view').classList.add('hidden');
+            document.getElementById('pet-adoption-form-view').classList.remove('hidden');
+        };
+
+        window.backToDetails = function() {
+            document.getElementById('pet-adoption-form-view').classList.add('hidden');
+            document.getElementById('pet-details-view').classList.remove('hidden');
+        };
+
+        window.submitAdoptionRequest = function(event, petName) {
+            event.preventDefault();
+            closePetModal();
+            showToast(`¡Solicitud enviada! Pronto te contactaremos para que conozcas a ${petName}.`);
+        };
+
+        function closePetModal() {
+            petModal.classList.add('hidden');
+            petModal.classList.remove('flex');
+        }
+
+        document.getElementById('close-modal-btn').addEventListener('click', closePetModal);
+        petModal.addEventListener('click', (e) => {
+            if (e.target === petModal) closePetModal();
+        });
+
+        // ==========================================
+        // 6. EMPAREJAMIENTO INTELIGENTE CON GEMINI API
+        // ==========================================
+        const matchForm = document.getElementById('ai-match-form');
+        const matchPlaceholder = document.getElementById('match-placeholder');
+        const matchLoading = document.getElementById('match-loading');
+        const matchResults = document.getElementById('match-results');
+        const matchIntroText = document.getElementById('match-intro-text');
+        const matchCardsContainer = document.getElementById('match-cards-container');
+
+        matchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const home = document.getElementById('match-home').value;
+            const activity = document.getElementById('match-activity').value;
+            const time = document.getElementById('match-time').value;
+            const family = document.getElementById('match-family').value;
+            const notes = document.getElementById('match-notes').value.trim();
+
+            // Mostrar estado cargando
+            matchPlaceholder.classList.add('hidden');
+            matchResults.classList.add('hidden');
+            matchLoading.classList.remove('hidden');
+
+            const catalogSummary = PETS_DATA.map(p => ({
+                id: p.id,
+                nombre: p.name,
+                especie: p.species,
+                edad: p.age,
+                tamano: p.size,
+                energia: p.energy,
+                personalidad: p.personality,
+                convivencia: p.goodWith
+            }));
+
+            const prompt = `
+Eres un especialista en comportamiento animal y adopciones del refugio "Huellas con Amor".
+Analiza el siguiente perfil de un adoptante y elige las 2 mejores mascotas compatibles de nuestro catálogo disponible.
+
+Perfil del adoptante:
+- Vivienda: ${home}
+- Nivel de actividad: ${activity}
+- Tiempo libre en casa: ${time}
+- Convivencia: ${family}
+- Preferencias adicionales: ${notes || 'Ninguna especificada'}
+
+Catálogo disponible:
+${JSON.stringify(catalogSummary)}
+
+Responde estrictamente en español cálido y empático siguiendo el esquema JSON solicitado.
+            `;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            mensajeIntroductorio: {
+                                type: "STRING",
+                                description: "Un párrafo breve y empático resumiendo por qué estas recomendaciones encajan con su hogar."
+                            },
+                            recomendaciones: {
+                                type: "ARRAY",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        petId: { type: "STRING", description: "El id exacto de la mascota del catálogo (ej. 'canela', 'oliver')" },
+                                        porcentajeCompatibilidad: { type: "INTEGER", description: "Número entre 85 y 99" },
+                                        razon: { type: "STRING", description: "Explicación clara de 2 oraciones sobre por qué encaja con su estilo de vida." }
+                                    },
+                                    required: ["petId", "porcentajeCompatibilidad", "razon"]
+                                }
+                            }
+                        },
+                        required: ["mensajeIntroductorio", "recomendaciones"]
+                    }
+                }
+            };
+
+            try {
+                const rawJson = await callGeminiAPI(payload);
+                const parsed = JSON.parse(rawJson);
+
+                matchIntroText.textContent = parsed.mensajeIntroductorio;
+                matchCardsContainer.innerHTML = '';
+
+                parsed.recomendaciones.forEach(rec => {
+                    const pet = PETS_DATA.find(p => p.id === rec.petId) || PETS_DATA[0];
+                    const item = document.createElement('div');
+                    item.className = 'p-4 rounded-2xl border border-cream-200 bg-cream-50/70 hover:bg-cream-50 transition-colors flex flex-col sm:flex-row gap-4 items-start sm:items-center';
+                    item.innerHTML = `
+                        <img src="${pet.image}" alt="${pet.name}" class="w-16 h-16 rounded-2xl object-cover shrink-0 border-2 border-white shadow-sm">
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h4 class="font-serif text-lg font-bold text-charcoal-900">${pet.name} <span class="text-xs font-sans font-normal text-charcoal-700">(${pet.species} • ${pet.size})</span></h4>
+                                <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-sage-100 text-sage-700">${rec.porcentajeCompatibilidad}% Compatible</span>
+                            </div>
+                            <p class="text-xs text-charcoal-700 mt-1 leading-relaxed">${rec.razon}</p>
+                            <button type="button" onclick="openPetModal('${pet.id}')" class="mt-2.5 inline-flex items-center gap-1 text-xs font-bold text-terracotta-600 hover:text-terracotta-500">
+                                Ver ficha y adoptar <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    `;
+                    matchCardsContainer.appendChild(item);
+                });
+
+                matchLoading.classList.add('hidden');
+                matchResults.classList.remove('hidden');
+                lucide.createIcons();
+
+            } catch (error) {
+                matchLoading.classList.add('hidden');
+                matchPlaceholder.classList.remove('hidden');
+                showToast("No pudimos conectar con el asistente IA en este momento. Intenta de nuevo.", "error");
+            }
+        });
+
+        document.getElementById('match-clear-btn').addEventListener('click', () => {
+            matchResults.classList.add('hidden');
+            matchPlaceholder.classList.remove('hidden');
+        });
+
+        // ==========================================
+        // 7. CHATBOT DE ADOPCIÓN Y CUIDADOS (GEMINI API)
+        // ==========================================
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+        let chatHistory = [];
+
+        const SYSTEM_INSTRUCTION_CHAT = `
+Eres Luna, la asistente virtual amable, cálida y experta en bienestar animal del refugio "Huellas con Amor".
+Tu misión es ayudar a las personas con dudas sobre:
+1. El proceso de adopción responsable (requisitos básicos: ser mayor de edad, entrevista breve, compromiso de cuidado y amor).
+2. Adaptación de perros y gatos rescatados al nuevo hogar (como la regla 3-3-3, socialización, ansiedad por separación).
+3. Cuidados básicos, nutrición, enriquecimiento ambiental y preparación del hogar.
+4. Información sobre las mascotas actuales del refugio: Canela, Oliver, Bruno, Miel, Toby, Nala, Rocky y Copito.
+
+Responde siempre en español natural, cercano y empático. Usa párrafos cortos o viñetas claras para facilitar la lectura. No des diagnósticos médicos complejos; en caso de emergencia veterinaria recomienda acudir a un médico veterinario presencial.
+        `;
+
+        function appendChatMessage(text, sender = 'bot') {
+            const wrapper = document.createElement('div');
+            if (sender === 'user') {
+                wrapper.className = 'flex items-start justify-end gap-3';
+                wrapper.innerHTML = `
+                    <div class="bg-terracotta-400 text-white rounded-2xl rounded-tr-none p-4 shadow-sm text-sm max-w-xl leading-relaxed">
+                        ${escapeHTML(text)}
+                    </div>
+                `;
+            } else {
+                wrapper.className = 'flex items-start gap-3 max-w-2xl';
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-terracotta-400 text-white flex items-center justify-center shrink-0 mt-1">
+                        <i data-lucide="paw-print" class="w-4 h-4"></i>
+                    </div>
+                    <div class="bg-white border border-cream-200 rounded-2xl rounded-tl-none p-4 shadow-sm text-sm text-charcoal-800 leading-relaxed whitespace-pre-line">
+                        ${formatBotText(text)}
+                    </div>
+                `;
+            }
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function appendTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'chat-typing';
+            indicator.className = 'flex items-start gap-3 max-w-2xl';
+            indicator.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-terracotta-400 text-white flex items-center justify-center shrink-0 mt-1">
+                    <i data-lucide="paw-print" class="w-4 h-4"></i>
+                </div>
+                <div class="bg-white border border-cream-200 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center gap-1.5">
+                    <span class="w-2 h-2 bg-terracotta-400 rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-terracotta-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+                    <span class="w-2 h-2 bg-terracotta-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                </div>
+            `;
+            chatMessages.appendChild(indicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+        }
+
+        function formatBotText(str) {
+            // Convierte negritas markdown simples **texto** a <strong>texto</strong> de forma segura
+            const safe = escapeHTML(str);
+            return safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
+
+        async function handleSendMessage(userText) {
+            if (!userText.trim()) return;
+
+            appendChatMessage(userText, 'user');
+            chatHistory.push({ role: 'user', parts: [{ text: userText }] });
+            chatInput.value = '';
+            chatInput.disabled = true;
+            appendTypingIndicator();
+
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: {
+                    parts: [{ text: SYSTEM_INSTRUCTION_CHAT }]
+                }
+            };
+
+            try {
+                const reply = await callGeminiAPI(payload);
+                document.getElementById('chat-typing')?.remove();
+                appendChatMessage(reply, 'bot');
+                chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+            } catch (error) {
+                document.getElementById('chat-typing')?.remove();
+                appendChatMessage("Lo siento, tuve un pequeño tropiezo de conexión 🐾. ¿Podrías volver a preguntarme en un instante?", 'bot');
+            } finally {
+                chatInput.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleSendMessage(chatInput.value);
+        });
+
+        document.querySelectorAll('.quick-prompt').forEach(btn => {
+            btn.addEventListener('click', () => {
+                handleSendMessage(btn.textContent.trim());
+            });
+        });
+
+        document.getElementById('clear-chat-btn').addEventListener('click', () => {
+            chatHistory = [];
+            chatMessages.innerHTML = `
+                <div class="flex items-start gap-3 max-w-2xl">
+                    <div class="w-8 h-8 rounded-full bg-terracotta-400 text-white flex items-center justify-center shrink-0 mt-1">
+                        <i data-lucide="paw-print" class="w-4 h-4"></i>
+                    </div>
+                    <div class="bg-white border border-cream-200 rounded-2xl rounded-tl-none p-4 shadow-sm text-sm text-charcoal-800 leading-relaxed">
+                        ¡Conversación reiniciada! 🐾 Cuéntame, ¿qué te gustaría saber sobre adopción o cuidados de mascotas?
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        });
+
+        // ==========================================
+        // 8. NAVEGACIÓN MÓVIL E INICIALIZACIÓN
+        // ==========================================
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Inicializar aplicación al cargar
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPets();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
